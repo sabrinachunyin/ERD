@@ -1,0 +1,95 @@
+// RC Models Entity Relationship Diagram
+erdiagram RC_Models
+
+notation=crowsfoot
+
+// Strong Entities
+entity Customer {
+    cust_id: VARCHAR(20) key
+    cust_name: VARCHAR(100)
+    email: VARCHAR(100)
+    phone: VARCHAR(20)
+}
+
+entity Product {
+    product_code: VARCHAR(20) key
+    product_name: VARCHAR(100)
+    category: VARCHAR(50)
+    manu_id: VARCHAR(20)
+    scale: VARCHAR(20)
+    quantity_on_hand: INTEGER
+    min_quantity: INTEGER
+    min_order_quantity: INTEGER
+    status: VARCHAR(20)
+}
+
+entity Promotion {
+    list_id: VARCHAR(20) key
+    promo_name: VARCHAR(100)
+    promo_type: VARCHAR(50)
+    start_date: DATE
+    end_date: DATE
+}
+
+entity Invoice {
+    invoice_id: VARCHAR(20) key
+    invoice_date: DATE
+    shipping_charge: DECIMAL(10,2)
+    total_amount: DECIMAL(10,2)
+}
+
+entity Manufacturer {
+    manufacturer_id: VARCHAR(20) key
+    manufacturer_name: VARCHAR(100)
+    website: VARCHAR(200)
+    address: TEXT
+}
+
+entity Return {
+    return_id: VARCHAR(20) key
+    return_date: DATE
+    reason: TEXT
+    status: VARCHAR(50)
+}
+
+// Bridge Entities
+entity Distribution {
+    distribution_id: VARCHAR(20) key
+    distribution_date: DATE
+}
+
+entity Line {
+    line_id: VARCHAR(20) key
+    quantity: INTEGER
+    unit_price: DECIMAL(10,2)
+    total_cost: DECIMAL(10,2)
+}
+
+// Relationships based on business rules
+relationship Creates {
+    Customer[1] -> Invoice[N]
+}
+
+relationship Contains {
+    Invoice[1] -> Line[N]
+}
+
+relationship Has_Return {
+    Line[1] -> Return[0..1]
+}
+
+relationship Includes {
+    Line[N] -> Product[1]
+}
+
+relationship Supplies {
+    Manufacturer[1] -> Product[N]
+}
+
+relationship Receives {
+    Customer[1] -> Distribution[0..N]
+}
+
+relationship Distributes {
+    Distribution[N] -> Promotion[1]
+}
